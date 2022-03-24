@@ -1,0 +1,63 @@
+<com.test.viewdraghelper.vdh.VDHLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                              xmlns:tools="http://schemas.android.com/tools"
+                              android:layout_width="match_parent"
+                              android:orientation="vertical"
+                              android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:clickable="true"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:background="#44ff0000"
+        android:text="I can be dragged !"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+<!--    <TextView
+        android:clickable="true"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="#8800ff00"
+        android:text="i will back to origin pos !"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <TextView
+        android:clickable="true"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="#880000ff"
+        android:text="use edge tracker to operate me !"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>-->
+
+    <LinearLayout
+        android:id="@+id/llyt_test"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#3f00ff00"
+        android:orientation="horizontal"
+        android:visibility="gone">
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_test1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onTest1"
+        android:text="隐藏view"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onTest2"
+        android:text="显示view"
+        android:gravity="center"
+        android:layout_above="@id/btn_test1"/>
+</com.test.viewdraghelper.vdh.VDHLayout>

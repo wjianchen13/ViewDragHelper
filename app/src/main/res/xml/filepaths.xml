@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--<files-parentPath> 分享app内部的存储；
+<external-parentPath> 分享外部的存储；
+<cache-parentPath> 分享内部缓存目录。--><!--
+    parentPath=“images/” 就是你所要共享的文件路径。
+    name="myimages" 就是告诉FileProvider 用 myimages 添加进URIs 内容字段去访问 files/images/ 的子目录。-->
+
+<!-- name=暴露出去的路径的名字
+ android 7.0及以上系统，出于安全方面的考虑，不再允许直接暴露真实路径给其他app进程
+android系统 会把/storage/emulated/0/my_app/cache/ 映射到content://com.storage.my_app.fileprovider/hello_kitty/
+/storage/emulated/0/my_app/cache/ 是真实路径
+content://com.storage.my_app.fileprovider/hello_kitty/ 是暴露给其他app的路径
+
+<paths xmlns:android="http://schemas.android.com/apk/res/android";>
+<external-path name="hello_kitty" path="my_app/cache/"/>
+</paths>
+
+ -->
+
+<!--
+ <files-path> ，对应 Context.getFilesDir() 方法；
+ <cache-path> ，对应 getCacheDir() 方法；
+<external-path>，对应 Environment.getExternalStorageDirectory() 方法，
+<external-files-path> ，对应 Context.getExternalFilesDir() 方法；
+<external-cache-path> ，对应 Context.getExternalCacheDir() 方法。
+-->
+
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path
+        name="other"
+        path="other/" />
+    <external-path
+        name="other-external"
+        path="other/" />
+
+    <files-path
+        name="images"
+        path="images/" />
+    <external-path
+        name="images-external"
+        path="images/" />
+
+    <external-files-path
+        name="files"
+        path="Download" />
+
+</paths>

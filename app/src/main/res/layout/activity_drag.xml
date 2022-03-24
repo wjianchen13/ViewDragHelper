@@ -1,0 +1,43 @@
+<com.test.viewdraghelper.drag.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dl_test"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hello"
+        android:layout_centerInParent="true"/>
+
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:onClick="onAdd"
+        android:text="添加一个view" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btn_add"
+        android:text="删除一个view"
+        android:onClick="onDelete"/>
+
+
+<!--    <com.test.viewdraghelper.drag.AutoScrollViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="150dp"
+        android:layout_height="200dp">
+    </com.test.viewdraghelper.drag.AutoScrollViewPager>-->
+
+    <com.test.viewdraghelper.base.Live2InterceptFrameLayout
+        android:id="@+id/flyt_contest"
+        android:layout_width="90dp"
+        android:layout_height="190dp"
+        android:background="#ff00ff00"/>
+
+
+</com.test.viewdraghelper.drag.DragLayout>
