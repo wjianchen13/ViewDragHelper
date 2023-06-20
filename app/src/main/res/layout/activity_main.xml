@@ -34,4 +34,19 @@
         android:layout_marginTop="10dp"
         android:onClick="onExpand"/>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="自动依附到边界"
+        android:layout_marginTop="10dp"
+        android:onClick="onAttach"/>
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="侧滑菜单"
+        android:layout_marginTop="10dp"
+        android:onClick="onDrawer"/>
+
 </LinearLayout>

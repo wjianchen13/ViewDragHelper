@@ -24,6 +24,10 @@
         <activity android:name=".drag.DragActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".expand.ExpandActivity" />
+        <activity android:name=".attach.AttachActivity" />
+        <activity android:name=".vdh.LeftDrawerLayoutActivity" />
+
+
     </application>
 
 </manifest>

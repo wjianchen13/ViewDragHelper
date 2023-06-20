@@ -142,3 +142,5 @@ public class VDHLayout extends RelativeLayout {
 //        mEdgeTrackerView = getChildAt(2);
     }
 }
+
+
