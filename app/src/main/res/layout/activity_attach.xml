@@ -1,24 +1,101 @@
 <com.test.viewdraghelper.attach.AttachLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/al_test"
     android:orientation="vertical"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <com.test.viewdraghelper.attach.TestLayout
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/music_flag_layout"
+        android:layout_width="44dp"
+        android:layout_height="72dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="44dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_test1" />
+
+        <View
+            android:id="@+id/svga_hide"
+            android:layout_width="40dp"
+            android:layout_height="56dp"
+            android:background="#9f00ff00"/>
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/music_box_layout"
+        android:layout_width="324dp"
+        android:layout_height="112dp"
+        android:clickable="true"
+        android:visibility="visible"
+        android:background="#3f0000ff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <View
+            android:id="@+id/v_bg"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_test2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/btn_test4"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="测试1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_test5"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="测试2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="#440000ff" >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    </com.test.viewdraghelper.attach.TestLayout>
+        <Button
+            android:id="@+id/btn_test1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="测试1" />
 
-    <TextView
-        android:layout_margin="10dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="#44ff0000"
-        android:text="I can be dragged !"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        <Button
+            android:id="@+id/btn_test2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="测试2" />
+
+        <Button
+            android:id="@+id/btn_test3"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="测试3" />
+
+    </LinearLayout>
 
 </com.test.viewdraghelper.attach.AttachLayout>

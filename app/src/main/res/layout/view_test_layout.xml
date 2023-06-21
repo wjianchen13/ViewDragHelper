@@ -23,7 +23,7 @@
             android:id="@+id/svga_hide"
             android:layout_width="40dp"
             android:layout_height="56dp"
-            android:background="#3f00ff00"/>
+            android:background="#9f00ff00"/>
 
     </RelativeLayout>
 
