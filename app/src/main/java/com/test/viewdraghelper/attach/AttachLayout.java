@@ -3,7 +3,6 @@ package com.test.viewdraghelper.attach;
 import static androidx.customview.widget.ViewDragHelper.STATE_IDLE;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,14 +17,20 @@ import androidx.customview.widget.ViewDragHelper;
 public class AttachLayout extends ConstraintLayout {
 
     private Context mContext;
-    private final ViewDragHelper mDragHelper;
+    private final ViewDragHelper mDragHelper1;
+    private final ViewDragHelper mDragHelper2;
 
     private View mDragView1;
     private View mDragView2;
     /**
      * 最后一次操作的View
      */
-    private View mLastView;
+    private View mLastView1;
+
+    /**
+     * 最后一次操作的View
+     */
+    private View mLastView2;
 
     private int mLeft1;
     private int mTop1;
@@ -35,12 +40,10 @@ public class AttachLayout extends ConstraintLayout {
 
     private boolean isChangePosition;
 
-    private Point mAutoBackOriginPos = new Point();
-
     public AttachLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContext = context;
-        mDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
+        mDragHelper1 = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
 
             /**
              * 捕获可拖动View
@@ -48,7 +51,7 @@ public class AttachLayout extends ConstraintLayout {
             @Override
             public boolean tryCaptureView(View child, int pointerId) {
                 log("mDragView start x: " + mDragView1.getX() + "  y: " + mDragView1.getY());
-                return child == mDragView1 || child == mDragView2;
+                return child == mDragView1;
             }
 
             /**
@@ -101,21 +104,15 @@ public class AttachLayout extends ConstraintLayout {
             @Override
             public void onViewDragStateChanged(int state) {
                 log("onViewDragStateChanged  state: " + state);
-                if(state == STATE_IDLE && mLastView != null) {
-                    if(mLastView == mDragView1 && mDragView2 != null) { // 拖动flag
+                if(state == STATE_IDLE && mLastView1 != null) {
+                    if(mDragView2 != null) { // 拖动flag
                         if(mDragView1.getLeft() == 0) { // 在左边
                             mDragView2.layout(mDragView1.getLeft(), mDragView1.getTop(), mDragView1.getLeft() + mDragView2.getWidth(), mDragView1.getTop() + mDragView2.getHeight());
                         } else { // 在右边
                             mDragView2.layout(mDragView1.getRight() - mDragView2.getWidth(), mDragView1.getTop(), mDragView1.getRight(), mDragView1.getTop() + mDragView2.getHeight());
                         }
-                    } else if(mLastView == mDragView2 && mDragView1 != null) { // 拖动的是box
-                        if(mDragView2.getLeft() == 0) { // 在左边
-                            mDragView1.layout(mDragView2.getLeft(), mDragView2.getTop(), mDragView2.getLeft() + mDragView1.getWidth(), mDragView2.getTop() + mDragView1.getHeight());
-                        } else {
-                            mDragView1.layout(mDragView2.getRight() - mDragView1.getWidth(), mDragView2.getTop(), mDragView2.getRight(), mDragView2.getTop() + mDragView1.getHeight());
-                        }
                     }
-                    mLastView = null; // 动画也会回调这个方法，需要区分拖动释放还是动画停止
+                    mLastView1 = null; // 动画也会回调这个方法，需要区分拖动释放还是动画停止
                 }
             }
 
@@ -129,7 +126,7 @@ public class AttachLayout extends ConstraintLayout {
             public void onViewReleased(View releasedChild, float xvel, float yvel) {
                 log("mDragView end x: " + releasedChild.getX() + "  y: " + releasedChild.getY());
                 log("mDragView end Left: " + releasedChild.getLeft() + "  top: " + releasedChild.getTop());
-                mLastView = releasedChild;
+                mLastView1 = releasedChild;
                 handleReleased(releasedChild, xvel, yvel);
             }
 
@@ -137,15 +134,120 @@ public class AttachLayout extends ConstraintLayout {
                 int screenWidth = getWidth();
                 if(releasedChild.getLeft() < (screenWidth - releasedChild.getWidth()) / 2) { // 在左半区域
 //                    if (releasedChild == mDragView1) {
-                        mDragHelper.settleCapturedViewAt(0, releasedChild.getTop());
+                        mDragHelper1.settleCapturedViewAt(0, releasedChild.getTop());
                         invalidate();
 //                    }
                 } else { // 右半区域
 //                    if (releasedChild == mDragView1) {
                         int right = getWidth() - releasedChild.getWidth() - getPaddingRight();
-                        mDragHelper.settleCapturedViewAt(right, releasedChild.getTop());
+                        mDragHelper1.settleCapturedViewAt(right, releasedChild.getTop());
 
                         invalidate();
+//                    }
+                }
+            }
+        });
+
+        mDragHelper2 = ViewDragHelper.create(this, 1.0f, new ViewDragHelper.Callback() {
+
+            /**
+             * 捕获可拖动View
+             */
+            @Override
+            public boolean tryCaptureView(View child, int pointerId) {
+                log("mDragView start x: " + mDragView1.getX() + "  y: " + mDragView1.getY());
+                return child == mDragView2;
+            }
+
+            /**
+             * 限定View只能在ViewGroup内部移动
+             */
+            @Override
+            public int clampViewPositionHorizontal(View child, int left, int dx) {
+                final int leftBound = getPaddingLeft();
+                final int rightBound = getWidth() - child.getWidth() - leftBound;
+                final int newLeft = Math.min(Math.max(left, leftBound), rightBound);
+                return newLeft;
+            }
+
+            /**
+             * 限定View只能在ViewGroup内部移动
+             */
+            @Override
+            public int clampViewPositionVertical(View child, int top, int dy) {
+                final int topBound = getPaddingTop();
+                final int bottomBound = getHeight() - child.getHeight() - topBound;
+                final int newTop = Math.min(Math.max(top, topBound), bottomBound);
+                return newTop;
+            }
+
+
+            @Override
+            public int getViewHorizontalDragRange(View child) {
+                return 1;
+            }
+
+            @Override
+            public int getViewVerticalDragRange(View child) {
+                return 1;
+            }
+
+            @Override
+            public void onViewPositionChanged(@NonNull View changedView, int left, int top, int dx, int dy) {
+                isChangePosition = true;
+                mLeft1 = left;
+                mTop1 = top;
+                mLeft2 = left;
+                mTop2 = top;
+                log("onViewPositionChanged  mLeft: " + mLeft1 + "  mTop: " + mTop1);
+            }
+
+            /**
+             * 2个View 拖动其中一个的时候，结束之后改变另外一个的位置
+             * @param state
+             */
+            @Override
+            public void onViewDragStateChanged(int state) {
+                log("onViewDragStateChanged  state: " + state);
+                if(state == STATE_IDLE && mLastView2 != null) {
+                    if(mDragView1 != null) { // 拖动的是box
+                        if(mDragView2.getLeft() == 0) { // 在左边
+                            mDragView1.layout(mDragView2.getLeft(), mDragView2.getTop(), mDragView2.getLeft() + mDragView1.getWidth(), mDragView2.getTop() + mDragView1.getHeight());
+                        } else {
+                            mDragView1.layout(mDragView2.getRight() - mDragView1.getWidth(), mDragView2.getTop(), mDragView2.getRight(), mDragView2.getTop() + mDragView1.getHeight());
+                        }
+                    }
+                    mLastView2 = null; // 动画也会回调这个方法，需要区分拖动释放还是动画停止
+                }
+            }
+
+            /**
+             * 手指释放的时候回调
+             * @param releasedChild
+             * @param xvel
+             * @param yvel
+             */
+            @Override
+            public void onViewReleased(View releasedChild, float xvel, float yvel) {
+                log("mDragView end x: " + releasedChild.getX() + "  y: " + releasedChild.getY());
+                log("mDragView end Left: " + releasedChild.getLeft() + "  top: " + releasedChild.getTop());
+                mLastView2 = releasedChild;
+                handleReleased(releasedChild, xvel, yvel);
+            }
+
+            private void handleReleased(View releasedChild, float xvel, float yvel) {
+                int screenWidth = getWidth();
+                if(releasedChild.getLeft() < (screenWidth - releasedChild.getWidth()) / 2) { // 在左半区域
+//                    if (releasedChild == mDragView1) {
+                    mDragHelper2.settleCapturedViewAt(0, releasedChild.getTop());
+                    invalidate();
+//                    }
+                } else { // 右半区域
+//                    if (releasedChild == mDragView1) {
+                    int right = getWidth() - releasedChild.getWidth() - getPaddingRight();
+                    mDragHelper2.settleCapturedViewAt(right, releasedChild.getTop());
+
+                    invalidate();
 //                    }
                 }
             }
@@ -154,18 +256,21 @@ public class AttachLayout extends ConstraintLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return mDragHelper.shouldInterceptTouchEvent(event);
+        return mDragHelper1.shouldInterceptTouchEvent(event) || mDragHelper2.shouldInterceptTouchEvent(event);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mDragHelper.processTouchEvent(event);
+        mDragHelper1.processTouchEvent(event);
+        mDragHelper2.processTouchEvent(event);
         return true;
     }
 
     @Override
     public void computeScroll() {
-        if(mDragHelper.continueSettling(true)) {
+        boolean continueSettling1 = mDragHelper1.continueSettling(true);
+        boolean continueSettling2 = mDragHelper2.continueSettling(true);
+        if(continueSettling1 || continueSettling2) {
             invalidate();
         }
     }
@@ -173,9 +278,7 @@ public class AttachLayout extends ConstraintLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        mAutoBackOriginPos.x = mDragView1.getLeft();
-        mAutoBackOriginPos.y = mDragView1.getTop();
-        log("onLayout x: " + mAutoBackOriginPos.x + "  y: " + mAutoBackOriginPos.y);
+        log("onLayout x: ");
         if(mDragView1 != null && isChangePosition) {
             int childLeft = mLeft1;
             int childTop = mTop1;
@@ -201,12 +304,16 @@ public class AttachLayout extends ConstraintLayout {
     }
 
     public void setTest2() {
-        smoothSlideViewTo(mDragView2, getWidth() - mDragView2.getWidth(), mDragView2.getTop() + 200);
+//        smoothDragView1To(mDragView2, getWidth() - mDragView2.getWidth(), mDragView2.getTop() + 200);
+        smoothDragView1To(0, 0);
     }
 
     public void setTest3() {
 //        adjustViewLayout(mDragView1, 2, 200, true);
-        hideFlag(2);
+//        hideFlag(2);
+
+        smoothDragView2To(0, 0);
+        smoothDragView1To(0, 0);
     }
 
     private int testDx = 20;
@@ -242,9 +349,33 @@ public class AttachLayout extends ConstraintLayout {
      * @param finalLeft
      * @param finalTop
      */
-    public void smoothSlideViewTo(View v, int finalLeft, int finalTop) {
-        if(mDragHelper != null && v != null) {
-            mDragHelper.smoothSlideViewTo(v, finalLeft, finalTop);
+    public void smoothDragView1To(View v, int finalLeft, int finalTop) {
+        if(mDragHelper1 != null && v != null) {
+            mDragHelper1.smoothSlideViewTo(v, finalLeft, finalTop);
+            invalidate();
+        }
+    }
+
+    /**
+     * 让 child 平滑地滑动到某个位置
+     * @param finalLeft
+     * @param finalTop
+     */
+    public void smoothDragView1To(int finalLeft, int finalTop) {
+        if(mDragHelper1 != null && mDragView1 != null) {
+            mDragHelper1.smoothSlideViewTo(mDragView1, finalLeft, finalTop);
+            invalidate();
+        }
+    }
+
+    /**
+     * 让 child 平滑地滑动到某个位置
+     * @param finalLeft
+     * @param finalTop
+     */
+    public void smoothDragView2To(int finalLeft, int finalTop) {
+        if(mDragHelper2 != null && mDragView2 != null) {
+            mDragHelper2.smoothSlideViewTo(mDragView2, finalLeft, finalTop);
             invalidate();
         }
     }
@@ -281,9 +412,9 @@ public class AttachLayout extends ConstraintLayout {
      */
     private void hideFlag(int position) {
         if(position == 1) {
-            smoothSlideViewTo(mDragView1, -mDragView1.getWidth() + testDx, mDragView1.getTop());
+            smoothDragView1To(-mDragView1.getWidth() + testDx, mDragView1.getTop());
         } else {
-            smoothSlideViewTo(mDragView1, getWidth() - testDx, mDragView1.getTop());
+            smoothDragView1To(getWidth() - testDx, mDragView1.getTop());
         }
     }
 
@@ -293,9 +424,9 @@ public class AttachLayout extends ConstraintLayout {
      */
     private void showFlag(int position) {
         if(position == 1) {
-            smoothSlideViewTo(mDragView1, testDx, mDragView1.getTop());
+            smoothDragView1To(testDx, mDragView1.getTop());
         } else {
-            smoothSlideViewTo(mDragView1, getWidth() - mDragView1.getWidth() - testDx, mDragView1.getTop());
+            smoothDragView1To(getWidth() - mDragView1.getWidth() - testDx, mDragView1.getTop());
         }
     }
 
@@ -305,9 +436,9 @@ public class AttachLayout extends ConstraintLayout {
      */
     private void hideBox(int position) {
         if(position == 1) {
-            smoothSlideViewTo(mDragView2, -mDragView2.getWidth() + testDx, mDragView2.getTop());
+            smoothDragView2To(-mDragView2.getWidth() + testDx, mDragView2.getTop());
         } else {
-            smoothSlideViewTo(mDragView2, getWidth() - testDx, mDragView2.getTop());
+            smoothDragView2To(getWidth() - testDx, mDragView2.getTop());
         }
     }
 
@@ -317,9 +448,9 @@ public class AttachLayout extends ConstraintLayout {
      */
     private void showBox(int position) {
         if(position == 1) {
-            smoothSlideViewTo(mDragView2, testDx, mDragView2.getTop());
+            smoothDragView2To(testDx, mDragView2.getTop());
         } else {
-            smoothSlideViewTo(mDragView2, getWidth() - mDragView2.getWidth() - testDx, mDragView2.getTop());
+            smoothDragView2To(getWidth() - mDragView2.getWidth() - testDx, mDragView2.getTop());
         }
     }
 
