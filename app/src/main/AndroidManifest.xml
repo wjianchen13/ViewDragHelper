@@ -26,6 +26,7 @@
         <activity android:name=".expand.ExpandActivity" />
         <activity android:name=".attach.AttachActivity" />
         <activity android:name=".vdh.LeftDrawerLayoutActivity" />
+        <activity android:name=".normal.NormalActivity" />
 
 
     </application>

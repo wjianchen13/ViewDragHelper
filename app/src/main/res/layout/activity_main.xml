@@ -41,12 +41,19 @@
         android:layout_marginTop="10dp"
         android:onClick="onAttach"/>
 
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="侧滑菜单"
         android:layout_marginTop="10dp"
         android:onClick="onDrawer"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="常规拖动View方式"
+        android:layout_marginTop="10dp"
+        android:onClick="onNormal"/>
+
 
 </LinearLayout>

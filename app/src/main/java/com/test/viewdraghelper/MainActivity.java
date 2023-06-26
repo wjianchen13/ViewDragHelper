@@ -9,6 +9,7 @@ import android.view.View;
 import com.test.viewdraghelper.attach.AttachActivity;
 import com.test.viewdraghelper.drag.DragActivity;
 import com.test.viewdraghelper.expand.ExpandActivity;
+import com.test.viewdraghelper.normal.NormalActivity;
 import com.test.viewdraghelper.vdh.LeftDrawerLayoutActivity;
 import com.test.viewdraghelper.vdh.VDHBlogActivity;
 
@@ -43,5 +44,10 @@ public class MainActivity extends AppCompatActivity {
     public void onDrawer(View v) {
         startActivity(new Intent(this, LeftDrawerLayoutActivity.class));
     }
+
+    public void onNormal(View v) {
+        startActivity(new Intent(this, NormalActivity.class));
+    }
+
 
 }
